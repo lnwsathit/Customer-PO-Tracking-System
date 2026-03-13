@@ -1,0 +1,83 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container-fluid px-4 pb-4">
+            <%- include('../partials/flashes') %>
+                <h4 class="mb-3">Customer List</h4>
+
+                <div class="card mb-4">
+                    <div class="card-header">Create New Customer</div>
+                    <div class="card-body">
+                        <form action="/customers" method="post" class="row g-2">
+                            <div class="col-md-3"><input class="form-control" name="name" placeholder="Customer Name"
+                                    required /></div>
+                            <div class="col-md-2"><input class="form-control" name="branch" placeholder="Branch" />
+                            </div>
+                            <div class="col-md-2"><input class="form-control" name="tax_no" placeholder="Tax ID" />
+                            </div>
+                            <div class="col-md-2"><input class="form-control" name="contact_person"
+                                    placeholder="Contact Person" /></div>
+                            <div class="col-md-2"><input class="form-control" name="mobile_phone"
+                                    placeholder="Mobile Phone" /></div>
+                            <div class="col-md-1"><button class="btn btn-primary w-100">Save</button></div>
+                            <div class="col-md-4"><input class="form-control" name="email" placeholder="Email" /></div>
+                            <div class="col-md-4"><input class="form-control" name="address" placeholder="Address" />
+                            </div>
+                            <div class="col-md-2"><select class="form-select" name="status">
+                                    <option value="active">active</option>
+                                    <option value="inactive">inactive</option>
+                                </select></div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped table-bordered js-datatable">
+                            <thead>
+                                <tr>
+                                    <th>Customer Name</th>
+                                    <th>Contact Person</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% rows.forEach((row)=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= row.name %>
+                                        </td>
+                                        <td>
+                                            <%= row.contact_person || '-' %>
+                                        </td>
+                                        <td>
+                                            <%= row.email || '-' %>
+                                        </td>
+                                        <td>
+                                            <%= row.mobile_phone || '-' %>
+                                        </td>
+                                        <td>
+                                            <%= row.status %>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <a href="/customers/<%= row.id %>/view"
+                                                    class="btn btn-sm btn-info text-white">View</a>
+                                                <a href="/customers/<%= row.id %>/edit"
+                                                    class="btn btn-sm btn-primary">Edit</a>
+                                                <form action="/customers/<%= row.id %>/delete" method="post"
+                                                    onsubmit="return confirm('Delete customer?')">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        <%- include('../partials/footer') %>

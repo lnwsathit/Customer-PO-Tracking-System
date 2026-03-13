@@ -1,0 +1,35 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <h4>Edit Customer</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/customers/<%= row.id %>/update" method="post" class="row g-2">
+                        <div class="col-md-6"><label class="form-label">Customer Name</label><input class="form-control"
+                                name="name" value="<%= row.name %>" required /></div>
+                        <div class="col-md-6"><label class="form-label">Branch</label><input class="form-control"
+                                name="branch" value="<%= row.branch || '' %>" /></div>
+                        <div class="col-md-12"><label class="form-label">Address</label><input class="form-control"
+                                name="address" value="<%= row.address || '' %>" /></div>
+                        <div class="col-md-4"><label class="form-label">Tax ID</label><input class="form-control"
+                                name="tax_no" value="<%= row.tax_no || '' %>" /></div>
+                        <div class="col-md-4"><label class="form-label">Contact Person</label><input
+                                class="form-control" name="contact_person" value="<%= row.contact_person || '' %>" />
+                        </div>
+                        <div class="col-md-4"><label class="form-label">Mobile Phone</label><input class="form-control"
+                                name="mobile_phone" value="<%= row.mobile_phone || '' %>" /></div>
+                        <div class="col-md-6"><label class="form-label">Email</label><input class="form-control"
+                                name="email" value="<%= row.email || '' %>" /></div>
+                        <div class="col-md-6"><label class="form-label">Status</label><select class="form-select"
+                                name="status">
+                                <option value="active" <%=row.status==='active' ? 'selected' : '' %>>active</option>
+                                <option value="inactive" <%=row.status==='inactive' ? 'selected' : '' %>>inactive
+                                </option>
+                            </select></div>
+                        <div class="col-12 d-flex gap-2"><button class="btn btn-primary">Save</button><a
+                                href="/customers" class="btn btn-secondary">Back</a></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/footer') %>

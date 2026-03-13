@@ -1,0 +1,26 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <h4>View User</h4>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Username:</strong>
+                        <%= row.username %>
+                    </p>
+                    <p><strong>Name:</strong>
+                        <%= row.name %>
+                    </p>
+                    <p><strong>Role:</strong>
+                        <%= row.role %>
+                    </p>
+                    <p><strong>Status:</strong>
+                        <%= row.status %>
+                    </p>
+                    <p><strong>Created:</strong>
+                        <%= new Date(row.created_at).toISOString().slice(0,10) %>
+                    </p>
+                    <a href="/users" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/footer') %>

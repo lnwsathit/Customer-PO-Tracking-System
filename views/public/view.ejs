@@ -1,0 +1,96 @@
+<%- include('../partials/head', { title }) %>
+    <div class="container py-4">
+        <h3 class="mb-4">Customer PO Tracking Timeline</h3>
+        <div class="timeline">
+            <div class="timeline-item latest">
+                <div class="timeline-content">
+                    <h5>Receive Customer PO</h5>
+                    <p class="mb-1">Customer Name: <strong>
+                            <%= header.customer_name %>
+                        </strong></p>
+                    <p class="mb-1">Customer PO No: <strong>
+                            <%= header.customer_po_no %>
+                        </strong></p>
+                    <p class="mb-1">Receive Date: <strong>
+                            <%= new Date(header.receive_date).toISOString().slice(0, 10) %>
+                        </strong></p>
+                    <p class="mb-1">Ref Quotation No: <strong>
+                            <%= header.bst_quotation_no || '-' %>
+                        </strong></p>
+                    <p class="mb-0">Detail: <%= header.detail || '-' %>
+                    </p>
+                </div>
+            </div>
+
+            <% issued.forEach((item, idx)=> { %>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <h6>#<%= idx + 1 %> Issued PO To Supplier</h6>
+                        <p class="mb-1">Issued PO Date: <strong>
+                                <%= new Date(item.issued_date).toISOString().slice(0, 10) %>
+                            </strong></p>
+                        <p class="mb-1">Supplier Name: <strong>
+                                <%= item.supplier_name %>
+                            </strong></p>
+                        <p class="mb-0">Detail: <%= item.detail || '-' %>
+                        </p>
+                    </div>
+                </div>
+                <% }) %>
+
+                    <% goods.forEach((item, idx)=> { %>
+                        <div class="timeline-item">
+                            <div class="timeline-content">
+                                <h6>#<%= idx + 1 %> Goods Receive From Supplier</h6>
+                                <p class="mb-1">Goods Receive Date: <strong>
+                                        <%= new Date(item.receive_date).toISOString().slice(0, 10) %>
+                                    </strong></p>
+                                <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                </p>
+                            </div>
+                        </div>
+                        <% }) %>
+
+                            <% shipping.forEach((item, idx)=> { %>
+                                <div class="timeline-item">
+                                    <div class="timeline-content">
+                                        <h6>#<%= idx + 1 %> Shipped</h6>
+                                        <p class="mb-1">Shipping Date: <strong>
+                                                <%= new Date(item.shipping_date).toISOString().slice(0, 10) %>
+                                            </strong></p>
+                                        <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% }) %>
+
+                                    <% billing.forEach((item, idx)=> { %>
+                                        <div class="timeline-item">
+                                            <div class="timeline-content">
+                                                <h6>#<%= idx + 1 %> Billing</h6>
+                                                <p class="mb-1">Billing Date: <strong>
+                                                        <%= new Date(item.billing_date).toISOString().slice(0, 10) %>
+                                                    </strong></p>
+                                                <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <% }) %>
+
+                                            <% if (header.status==='completed' ) { %>
+                                                <div class="timeline-item latest">
+                                                    <div class="timeline-content">
+                                                        <h5>Completed</h5>
+                                                        <p class="mb-0">Record Date: <strong>
+                                                                <%= header.completed_at ? new
+                                                                    Date(header.completed_at).toISOString().slice(0, 10)
+                                                                    : '-' %>
+                                                            </strong></p>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+        </div>
+
+        <a class="btn btn-secondary mt-4" href="<%= backUrl %>">Back</a>
+    </div>
+    <%- include('../partials/footer') %>

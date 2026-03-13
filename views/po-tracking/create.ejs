@@ -1,0 +1,61 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <%- include('../partials/flashes') %>
+                <h4 class="mb-3">Create New Customer PO Tracking</h4>
+
+                <div class="card">
+                    <div class="card-header">Process 1: Receive Customer PO</div>
+                    <div class="card-body">
+                        <form action="/po-tracking" method="post" enctype="multipart/form-data" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Customer Name</label>
+                                <select class="form-select" name="customer_id" required>
+                                    <% customers.forEach((c)=> { %>
+                                        <option value="<%= c.id %>">
+                                            <%= c.name %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                            <div class="col-md-6 position-relative">
+                                <label class="form-label">Quotation No</label>
+                                <input type="text" id="quotation-no-autocomplete" class="form-control"
+                                    placeholder="Type quotation no..." autocomplete="off"
+                                    data-autocomplete-url="/api/quotations/autocomplete"
+                                    data-autocomplete-target="bst_customer_id"
+                                    data-autocomplete-menu="quotation-no-autocomplete-menu"
+                                    data-autocomplete-label="bst_quotation_no" />
+                                <input type="hidden" name="bst_customer_id" id="bst_customer_id" />
+                                <div id="quotation-no-autocomplete-menu" class="autocomplete-menu list-group d-none">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Customer PO No</label>
+                                <input name="customer_po_no" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Customer PO PDF</label>
+                                <input type="file" name="customer_po_file" accept="application/pdf"
+                                    class="form-control" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Receive Date</label>
+                                <input type="date" name="receive_date" class="form-control" required />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Delivery Due Date</label>
+                                <input type="date" name="delivery_due_date" class="form-control" required />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Detail (100 chars)</label>
+                                <textarea name="detail" maxlength="100" class="form-control"></textarea>
+                            </div>
+                            <div class="col-12 d-grid">
+                                <button class="btn btn-primary">Save Process 1</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+        <%- include('../partials/footer') %>

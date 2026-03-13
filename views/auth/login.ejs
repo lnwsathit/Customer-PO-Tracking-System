@@ -1,0 +1,21 @@
+<%- include('../partials/head', { title }) %>
+    <div class="container py-5" style="max-width: 480px;">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3 text-center">Login</h4>
+                <%- include('../partials/flashes') %>
+                    <form method="post" action="/login">
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input class="form-control" name="username" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input class="form-control" type="password" name="password" required />
+                        </div>
+                        <button class="btn btn-primary w-100">Login</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+    <%- include('../partials/footer') %>

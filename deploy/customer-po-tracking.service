@@ -1,0 +1,16 @@
+[Unit]
+Description=Customer PO Tracking System
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/var/www/customer-po-tracking
+ExecStart=/usr/bin/node /var/www/customer-po-tracking/src/server.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+EnvironmentFile=/var/www/customer-po-tracking/.env
+
+[Install]
+WantedBy=multi-user.target

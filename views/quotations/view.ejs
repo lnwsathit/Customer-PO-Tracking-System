@@ -1,0 +1,30 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <h4>View Quotation</h4>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Quotation No:</strong>
+                        <%= row.bst_quotation_no %>
+                    </p>
+                    <p><strong>Customer:</strong>
+                        <%= row.customer_name %>
+                    </p>
+                    <p><strong>Quotation Date:</strong>
+                        <%= new Date(row.bst_quotation_date).toISOString().slice(0,10) %>
+                    </p>
+                    <p><strong>Status:</strong>
+                        <%= row.status %>
+                    </p>
+                    <p><strong>Detail:</strong>
+                        <%= row.detail || '-' %>
+                    </p>
+                    <% if (row.file_path) { %>
+                        <p><strong>File:</strong> <a href="/uploads/<%= row.file_path %>" target="_blank">Download
+                                PDF</a></p>
+                        <% } %>
+                            <a href="/quotations" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/footer') %>

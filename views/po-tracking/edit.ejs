@@ -1,0 +1,215 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <%- include('../partials/flashes') %>
+                <h4 class="mb-3">Edit PO Tracking #<%= header.id %>
+                </h4>
+
+                <div class="card mb-3">
+                    <div class="card-header">Process 1: Receive Customer PO</div>
+                    <div class="card-body">
+                        <form action="/po-tracking/<%= header.id %>/header" method="post" enctype="multipart/form-data"
+                            class="row g-3">
+                            <div class="col-md-6"><label class="form-label">Customer Name</label><select
+                                    class="form-select" name="customer_id" required>
+                                    <% customers.forEach((c)=>{ %><option value="<%= c.id %>"
+                                            <%=header.customer_id===c.id ? 'selected' : '' %>><%= c.name %>
+                                        </option>
+                                        <% }) %>
+                                </select></div>
+                            <div class="col-md-6"><label class="form-label">Quotation No</label><select
+                                    class="form-select" name="bst_customer_id">
+                                    <option value="">-</option>
+                                    <% quotations.forEach((q)=>{ %><option value="<%= q.id %>"
+                                            <%=header.bst_customer_id===q.id ? 'selected' : '' %>><%= q.bst_quotation_no
+                                                %>
+                                        </option>
+                                        <% }) %>
+                                </select></div>
+                            <div class="col-md-6"><label class="form-label">Customer PO No</label><input
+                                    name="customer_po_no" class="form-control" value="<%= header.customer_po_no %>"
+                                    required /></div>
+                            <div class="col-md-6"><label class="form-label">Customer PO PDF</label><input type="file"
+                                    name="customer_po_file" accept="application/pdf" class="form-control" /></div>
+                            <div class="col-md-4"><label class="form-label">Receive Date</label><input type="date"
+                                    name="receive_date" class="form-control"
+                                    value="<%= new Date(header.receive_date).toISOString().slice(0,10) %>" required />
+                            </div>
+                            <div class="col-md-4"><label class="form-label">Delivery Due Date</label><input type="date"
+                                    name="delivery_due_date" class="form-control"
+                                    value="<%= new Date(header.delivery_due_date).toISOString().slice(0,10) %>"
+                                    required /></div>
+                            <div class="col-md-4"><label class="form-label">Status</label><select class="form-select"
+                                    name="status">
+                                    <option value="on_process" <%=header.status==='on_process' ? 'selected' : '' %>
+                                        >on_process</option>
+                                    <option value="completed" <%=header.status==='completed' ? 'selected' : '' %>
+                                        >completed</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label">Detail (100 chars)</label><textarea
+                                    name="detail" maxlength="100"
+                                    class="form-control"><%= header.detail || '' %></textarea></div>
+                            <div class="col-12 d-grid"><button class="btn btn-primary">Save Process 1</button></div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">Process 2: Issued PO to Supplier</div>
+                    <div class="card-body">
+                        <form action="/po-tracking/<%= header.id %>/issued" method="post" enctype="multipart/form-data"
+                            class="mb-3">
+                            <div id="issued-rows" data-repeatable-container="issued">
+                                <div class="row g-2 mb-2" data-repeatable-row>
+                                    <div class="col-md-3"><input name="bst_po_no" class="form-control"
+                                            placeholder="Issued PO No" required /></div>
+                                    <div class="col-md-3"><input name="supplier_name" class="form-control"
+                                            placeholder="Supplier Name" required /></div>
+                                    <div class="col-md-2"><input name="issued_date" type="date" class="form-control"
+                                            required /></div>
+                                    <div class="col-md-2"><input name="issued_file" type="file" accept="application/pdf"
+                                            class="form-control" /></div>
+                                    <div class="col-md-2 d-grid"><button type="button" class="btn btn-outline-danger"
+                                            data-remove-row>Remove</button></div>
+                                    <div class="col-12"><input name="detail" class="form-control"
+                                            placeholder="Detail" /></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary" data-add-row="issued">+ Add Issued
+                                    PO</button>
+                                <button class="btn btn-primary">Save Process 2</button>
+                            </div>
+                        </form>
+                        <% issued.forEach((item)=> { %>
+                            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                <div>#<%= item.id %> - <%= item.bst_po_no %> | <%= item.supplier_name %> | <%= new
+                                                    Date(item.issued_date).toISOString().slice(0,10) %>
+                                </div>
+                                <form method="post" action="/po-tracking/<%= header.id %>/issued/<%= item.id %>/delete">
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">Process 3: Goods Receive</div>
+                    <div class="card-body">
+                        <form action="/po-tracking/<%= header.id %>/goods" method="post" enctype="multipart/form-data"
+                            class="mb-3">
+                            <div id="goods-rows" data-repeatable-container="goods">
+                                <div class="row g-2 mb-2" data-repeatable-row>
+                                    <div class="col-md-3"><input name="supplier_invoice_no" class="form-control"
+                                            placeholder="Supplier Invoice No" required /></div>
+                                    <div class="col-md-3"><input name="supplier_name" class="form-control"
+                                            placeholder="Supplier Name" required /></div>
+                                    <div class="col-md-2"><input name="receive_date" type="date" class="form-control"
+                                            required /></div>
+                                    <div class="col-md-2"><input name="goods_file" type="file" accept="application/pdf"
+                                            class="form-control" /></div>
+                                    <div class="col-md-2 d-grid"><button type="button" class="btn btn-outline-danger"
+                                            data-remove-row>Remove</button></div>
+                                    <div class="col-12"><input name="detail" class="form-control"
+                                            placeholder="Detail" /></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary" data-add-row="goods">+ Add Goods
+                                    Receive</button>
+                                <button class="btn btn-primary">Save Process 3</button>
+                            </div>
+                        </form>
+                        <% goods.forEach((item)=> { %>
+                            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                <div>#<%= item.id %> - <%= item.supplier_invoice_no %> | <%= item.supplier_name %> | <%=
+                                                    new Date(item.receive_date).toISOString().slice(0,10) %>
+                                </div>
+                                <form method="post" action="/po-tracking/<%= header.id %>/goods/<%= item.id %>/delete">
+                                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">Process 4: Shipping</div>
+                    <div class="card-body">
+                        <form action="/po-tracking/<%= header.id %>/shipping" method="post" class="mb-3">
+                            <div id="shipping-rows" data-repeatable-container="shipping">
+                                <div class="row g-2 mb-2" data-repeatable-row>
+                                    <div class="col-md-4"><input name="shipping_date" type="date" class="form-control"
+                                            required /></div>
+                                    <div class="col-md-6"><input name="detail" class="form-control"
+                                            placeholder="Shipping of delivery detail" /></div>
+                                    <div class="col-md-2 d-grid"><button type="button" class="btn btn-outline-danger"
+                                            data-remove-row>Remove</button></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary" data-add-row="shipping">+ Add
+                                    Shipping</button>
+                                <button class="btn btn-primary">Save Process 4</button>
+                            </div>
+                        </form>
+                        <% shipping.forEach((item)=> { %>
+                            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                <div>#<%= item.id %> - <%= new Date(item.shipping_date).toISOString().slice(0,10) %> |
+                                            <%= item.detail || '-' %>
+                                </div>
+                                <form method="post"
+                                    action="/po-tracking/<%= header.id %>/shipping/<%= item.id %>/delete"><button
+                                        class="btn btn-sm btn-outline-danger">Delete</button></form>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">Process 5: Billing</div>
+                    <div class="card-body">
+                        <form action="/po-tracking/<%= header.id %>/billing" method="post" enctype="multipart/form-data"
+                            class="mb-3">
+                            <div id="billing-rows" data-repeatable-container="billing">
+                                <div class="row g-2 mb-2" data-repeatable-row>
+                                    <div class="col-md-3"><input name="bst_invoice_no" class="form-control"
+                                            placeholder="Billing No" required /></div>
+                                    <div class="col-md-3"><input name="billing_date" type="date" class="form-control"
+                                            required /></div>
+                                    <div class="col-md-3"><input name="billing_file" type="file"
+                                            accept="application/pdf" class="form-control" /></div>
+                                    <div class="col-md-3 d-grid"><button type="button" class="btn btn-outline-danger"
+                                            data-remove-row>Remove</button></div>
+                                    <div class="col-12"><input name="detail" class="form-control"
+                                            placeholder="Detail" /></div>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" class="btn btn-outline-primary" data-add-row="billing">+ Add
+                                    Billing</button>
+                                <button class="btn btn-primary">Save Process 5</button>
+                            </div>
+                        </form>
+                        <% billing.forEach((item)=> { %>
+                            <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+                                <div>#<%= item.id %> - <%= item.bst_invoice_no %> | <%= new
+                                                Date(item.billing_date).toISOString().slice(0,10) %>
+                                </div>
+                                <form method="post"
+                                    action="/po-tracking/<%= header.id %>/billing/<%= item.id %>/delete"><button
+                                        class="btn btn-sm btn-outline-danger">Delete</button></form>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+
+                <form action="/po-tracking/<%= header.id %>/complete" method="post" class="d-grid mb-3">
+                    <button class="btn btn-success" <%=header.status==='completed' ? 'disabled' : '' %>>Process 6:
+                        Completed</button>
+                </form>
+
+                <a class="btn btn-secondary" href="/po-tracking">Back</a>
+        </div>
+        <%- include('../partials/footer') %>

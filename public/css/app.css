@@ -1,0 +1,87 @@
+body {
+    background: #f7f8fa;
+}
+
+.stat-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.timeline {
+    position: relative;
+    margin-left: 12px;
+    padding-left: 24px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: #b8bec8;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 20px;
+    opacity: 0.75;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -30px;
+    top: 10px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #9aa3af;
+}
+
+.timeline-item.latest {
+    opacity: 1;
+}
+
+.timeline-item.latest::before {
+    background: #212529;
+}
+
+.timeline-content {
+    background: #fff;
+    border: 1px solid #dfe3e8;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+input[type='file']::file-selector-button {
+    background-color: #343a40;
+    color: #fff;
+    border: 1px solid #343a40;
+}
+
+input[type='file']:hover::file-selector-button {
+    background-color: #212529;
+    border-color: #212529;
+}
+
+input[type='file']::-webkit-file-upload-button {
+    background-color: #343a40;
+    color: #fff;
+    border: 1px solid #343a40;
+}
+
+input[type='file']:hover::-webkit-file-upload-button {
+    background-color: #212529;
+    border-color: #212529;
+}
+
+.autocomplete-menu {
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    top: calc(100% - 2px);
+    z-index: 1050;
+    max-height: 220px;
+    overflow-y: auto;
+}

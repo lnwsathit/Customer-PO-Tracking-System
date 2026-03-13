@@ -1,0 +1,35 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container py-4">
+            <h4>View Customer</h4>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Name:</strong>
+                        <%= row.name %>
+                    </p>
+                    <p><strong>Branch:</strong>
+                        <%= row.branch || '-' %>
+                    </p>
+                    <p><strong>Address:</strong>
+                        <%= row.address || '-' %>
+                    </p>
+                    <p><strong>Tax ID:</strong>
+                        <%= row.tax_no || '-' %>
+                    </p>
+                    <p><strong>Contact Person:</strong>
+                        <%= row.contact_person || '-' %>
+                    </p>
+                    <p><strong>Mobile Phone:</strong>
+                        <%= row.mobile_phone || '-' %>
+                    </p>
+                    <p><strong>Email:</strong>
+                        <%= row.email || '-' %>
+                    </p>
+                    <p><strong>Status:</strong>
+                        <%= row.status %>
+                    </p>
+                    <a href="/customers" class="btn btn-secondary">Back</a>
+                </div>
+            </div>
+        </div>
+        <%- include('../partials/footer') %>

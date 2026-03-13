@@ -1,0 +1,10 @@
+<% if (flashSuccess && flashSuccess.length) { %>
+    <div class="alert alert-success">
+        <%= flashSuccess[0] %>
+    </div>
+    <% } %>
+        <% if (flashError && flashError.length) { %>
+            <div class="alert alert-danger">
+                <%= flashError[0] %>
+            </div>
+            <% } %>

@@ -1,0 +1,32 @@
+{
+    "name": "customer-po-tracking-system",
+    "version": "1.0.0",
+    "description": "Customer PO Tracking System",
+    "main": "src/server.js",
+    "scripts": {
+        "start": "node src/server.js",
+        "dev": "nodemon src/server.js",
+        "lint": "eslint ."
+    },
+    "engines": {
+        "node": ">=20"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "connect-flash": "^0.1.1",
+        "dotenv": "^16.4.5",
+        "ejs": "^3.1.10",
+        "express": "^4.19.2",
+        "express-mysql-session": "^2.1.8",
+        "express-rate-limit": "^7.4.0",
+        "express-session": "^1.18.0",
+        "helmet": "^7.1.0",
+        "method-override": "^3.0.0",
+        "multer": "^2.0.2",
+        "mysql2": "^3.11.0"
+    },
+    "devDependencies": {
+        "eslint": "^9.9.1",
+        "nodemon": "^3.1.4"
+    }
+}

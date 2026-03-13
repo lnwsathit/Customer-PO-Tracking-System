@@ -1,0 +1,15 @@
+<%- include('head', { title }) %>
+    <div class="container py-5">
+        <div class="card border-danger">
+            <div class="card-body">
+                <h3 class="text-danger mb-3">
+                    <%= title %>
+                </h3>
+                <p class="mb-0">
+                    <%= message %>
+                </p>
+                <a href="/" class="btn btn-primary mt-3">Go Home</a>
+            </div>
+        </div>
+    </div>
+    <%- include('footer') %>

@@ -1,0 +1,112 @@
+<%- include('../partials/head', { title }) %>
+    <%- include('../partials/nav') %>
+        <div class="container-fluid px-4 pb-4">
+            <%- include('../partials/flashes') %>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6>Total Receive Customer PO</h6>
+                                <h3>
+                                    <%= summary.total_receive || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6>Total On Process</h6>
+                                <h3>
+                                    <%= summary.total_on_process || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6>Total Completed</h6>
+                                <h3>
+                                    <%= summary.total_completed || 0 %>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Chart by Customer</span>
+                        <% if (isYtd) { %>
+                            <span class="badge bg-info text-dark">Year to Date (<%= year %>)</span>
+                            <% } else if (month) { %>
+                                <span class="badge bg-secondary">Month <%= month %> / <%= year %></span>
+                                <% } else { %>
+                                    <span class="badge bg-secondary">Full Year <%= year %></span>
+                                    <% } %>
+                    </div>
+                    <div class="card-body">
+                        <form method="get" class="row g-2 mb-3 align-items-end">
+                            <div class="col-md-3">
+                                <label class="form-label mb-1">Month</label>
+                                <input name="month" type="number" min="1" max="12" class="form-control"
+                                    placeholder="All months" value="<%= month || '' %>" />
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label mb-1">Year</label>
+                                <input name="year" type="number" min="2000" max="2100" class="form-control"
+                                    placeholder="e.g. <%= new Date().getFullYear() %>" value="<%= year || '' %>" />
+                            </div>
+                            <div class="col-md-2 d-grid">
+                                <button class="btn btn-primary">Filter</button>
+                            </div>
+                            <div class="col-md-2 d-grid">
+                                <a href="/dashboard?ytd=1"
+                                    class="btn <%= isYtd ? 'btn-info' : 'btn-outline-info' %>">YTD</a>
+                            </div>
+                            <div class="col-md-2 d-grid">
+                                <a href="/dashboard" class="btn btn-outline-secondary">Clear</a>
+                            </div>
+                        </form>
+                        <canvas id="customerChart" height="110"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">PO Ordered by Closest Delivery Due Date</div>
+                    <div class="card-body table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Customer PO No</th>
+                                    <th>Customer</th>
+                                    <th>Delivery Due</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% dueSoon.forEach((item)=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= item.customer_po_no %>
+                                        </td>
+                                        <td>
+                                            <%= item.customer_name %>
+                                        </td>
+                                        <td>
+                                            <%= new Date(item.delivery_due_date).toISOString().slice(0, 10) %>
+                                        </td>
+                                        <td>
+                                            <%= item.status %>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+        <input type="hidden" id="customer-chart-data" value='<%- JSON.stringify(customerChart) %>' />
+        <%- include('../partials/footer') %>
