@@ -122,7 +122,7 @@ sudo systemctl reload nginx
 ```
 
 Access from network:
-- `http://192.168.1.139`
+- `http://192.168.1.114`
 
 ## GitHub Push
 
