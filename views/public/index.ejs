@@ -9,9 +9,8 @@
             <div class="card-body">
                 <form action="/search" method="get" class="row g-2">
                     <div class="col-md-10">
-                        <input type="text" name="q" class="form-control"
-                            placeholder="Search by Customer PO No, Quotation No, Customer Name" value="<%= q || '' %>"
-                            required />
+                        <input type="text" name="q" class="form-control" placeholder="Search by Customer PO No"
+                            value="<%= q || '' %>" required />
                     </div>
                     <div class="col-md-2 d-grid">
                         <button class="btn btn-primary" type="submit">Search</button>
@@ -21,49 +20,126 @@
         </div>
 
         <% if (hasSearched) { %>
-            <div class="card">
-                <div class="card-header">Search Result</div>
-                <div class="card-body table-responsive">
-                    <% if (results.length) { %>
-                        <table class="table table-striped table-bordered js-datatable">
-                            <thead>
-                                <tr>
-                                    <th>Customer PO No</th>
-                                    <th>Customer Name</th>
-                                    <th>Receive Date</th>
-                                    <th>Status</th>
-                                    <th>View</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% results.forEach((row)=> { %>
-                                    <tr>
-                                        <td>
-                                            <%= row.customer_po_no %>
-                                        </td>
-                                        <td>
-                                            <%= row.customer_name %>
-                                        </td>
-                                        <td>
-                                            <%= new Date(row.receive_date).toISOString().slice(0, 10) %>
-                                        </td>
-                                        <td>
-                                            <span
-                                                class="badge <%= row.status === 'completed' ? 'bg-success' : 'bg-warning text-dark' %>">
-                                                <%= row.status %>
-                                            </span>
-                                        </td>
-                                        <td><a class="btn btn-sm btn-primary" href="/tracking/<%= row.id %>">View</a>
-                                        </td>
-                                    </tr>
-                                    <% }) %>
-                            </tbody>
-                        </table>
-                        <% } else { %>
-                            <div class="text-muted">No matching records found.</div>
-                            <% } %>
+            <% if (!results.length) { %>
+                <div class="alert alert-secondary" role="alert">
+                    No matching records found.
                 </div>
-            </div>
-            <% } %>
+                <% } else if (results.length> 1) { %>
+                    <div class="alert alert-info" role="alert">
+                        <%= results.length %> matching records found. Showing the most recent result below.
+                    </div>
+                    <% } %>
+
+                        <% if (typeof selectedTracking !=='undefined' && selectedTracking && selectedTracking.header) {
+                            %>
+                            <div class="card mt-4">
+                                <div class="card-header">PO Tracking Timeline</div>
+                                <div class="card-body">
+                                    <div class="timeline">
+                                        <div class="timeline-item latest">
+                                            <div class="timeline-content">
+                                                <h5>Receive Customer PO</h5>
+                                                <p class="mb-1">Customer Name: <strong>
+                                                        <%= selectedTracking.header.customer_name %>
+                                                    </strong></p>
+                                                <p class="mb-1">Customer PO No: <strong>
+                                                        <%= selectedTracking.header.customer_po_no %>
+                                                    </strong></p>
+                                                <p class="mb-1">Receive Date: <strong>
+                                                        <%= new
+                                                            Date(selectedTracking.header.receive_date).toISOString().slice(0,
+                                                            10) %>
+                                                    </strong></p>
+                                                <p class="mb-1">Ref Quotation No: <strong>
+                                                        <%= selectedTracking.header.bst_quotation_no || '-' %>
+                                                    </strong></p>
+                                                <p class="mb-0">Detail: <%= selectedTracking.header.detail || '-' %>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <% selectedTracking.issued.forEach((item, idx)=> { %>
+                                            <div class="timeline-item">
+                                                <div class="timeline-content">
+                                                    <h6>#<%= idx + 1 %> Issued PO To Supplier</h6>
+                                                    <p class="mb-1">Issued PO Date: <strong>
+                                                            <%= new Date(item.issued_date).toISOString().slice(0, 10) %>
+                                                        </strong></p>
+                                                    <p class="mb-1">Supplier Name: <strong>
+                                                            <%= item.supplier_name %>
+                                                        </strong></p>
+                                                    <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <% }) %>
+
+                                                <% selectedTracking.goods.forEach((item, idx)=> { %>
+                                                    <div class="timeline-item">
+                                                        <div class="timeline-content">
+                                                            <h6>#<%= idx + 1 %> Goods Receive From Supplier</h6>
+                                                            <p class="mb-1">Goods Receive Date: <strong>
+                                                                    <%= new
+                                                                        Date(item.receive_date).toISOString().slice(0,
+                                                                        10) %>
+                                                                </strong></p>
+                                                            <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+
+                                                        <% selectedTracking.shipping.forEach((item, idx)=> { %>
+                                                            <div class="timeline-item">
+                                                                <div class="timeline-content">
+                                                                    <h6>#<%= idx + 1 %> Shipped</h6>
+                                                                    <p class="mb-1">Shipping Date: <strong>
+                                                                            <%= new
+                                                                                Date(item.shipping_date).toISOString().slice(0,
+                                                                                10) %>
+                                                                        </strong></p>
+                                                                    <p class="mb-0">Detail: <%= item.detail || '-' %>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <% }) %>
+
+                                                                <% selectedTracking.billing.forEach((item, idx)=> { %>
+                                                                    <div class="timeline-item">
+                                                                        <div class="timeline-content">
+                                                                            <h6>#<%= idx + 1 %> Billing</h6>
+                                                                            <p class="mb-1">Billing Date: <strong>
+                                                                                    <%= new
+                                                                                        Date(item.billing_date).toISOString().slice(0,
+                                                                                        10) %>
+                                                                                </strong></p>
+                                                                            <p class="mb-0">Detail: <%= item.detail
+                                                                                    || '-' %>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <% }) %>
+
+                                                                        <% if
+                                                                            (selectedTracking.header.status==='completed'
+                                                                            ) { %>
+                                                                            <div class="timeline-item latest">
+                                                                                <div class="timeline-content">
+                                                                                    <h5>Completed</h5>
+                                                                                    <p class="mb-0">Record Date:
+                                                                                        <strong>
+                                                                                            <%= selectedTracking.header.completed_at
+                                                                                                ? new
+                                                                                                Date(selectedTracking.header.completed_at).toISOString().slice(0,
+                                                                                                10) : '-' %>
+                                                                                        </strong></p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                                <% } %>
     </div>
     <%- include('../partials/footer') %>

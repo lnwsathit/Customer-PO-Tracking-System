@@ -48,9 +48,11 @@ async function index(req, res) {
     const [customerChart] = await pool.execute(chartQuery, chartParams);
 
     const [dueSoon] = await pool.execute(
-        `SELECT pt.id, c.name AS customer_name, pt.customer_po_no, pt.delivery_due_date, pt.status
+        `SELECT pt.id, c.name AS customer_name, pt.customer_po_no, pt.delivery_due_date, pt.status,
+            DATEDIFF(pt.delivery_due_date, CURDATE()) AS days_remaining
      FROM po_tracking pt
      JOIN customers c ON c.id = pt.customer_id
+     WHERE pt.status = 'on_process'
      ORDER BY pt.delivery_due_date ASC
      LIMIT 10`
     );

@@ -54,5 +54,6 @@ router.post('/users/:id/delete', requireRole(['system_admin']), userController.r
 
 router.get('/api/customers/autocomplete', requireAuth, customerController.autocomplete);
 router.get('/api/quotations/autocomplete', requireAuth, quotationController.autocomplete);
+router.get('/api/po-tracking/customer-po-availability', requireAuth, poTrackingController.checkCustomerPoAvailability);
 
 module.exports = router;

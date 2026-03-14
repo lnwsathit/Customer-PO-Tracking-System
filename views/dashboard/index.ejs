@@ -97,6 +97,17 @@
                                         </td>
                                         <td>
                                             <%= new Date(item.delivery_due_date).toISOString().slice(0, 10) %>
+                                                <% if (item.days_remaining>= 1 && item.days_remaining <= 2) { %>
+                                                        <span class="badge bg-danger ms-2">Remaining <%=
+                                                                item.days_remaining %>
+                                                                <%= item.days_remaining===1 ? 'day' : 'days' %></span>
+                                                        <% } else if (item.days_remaining>= 3 && item.days_remaining <=
+                                                                5) { %>
+                                                                <span class="badge bg-warning text-dark ms-2">Remaining
+                                                                    <%= item.days_remaining %>
+                                                                        <%= item.days_remaining===1 ? 'day' : 'days' %>
+                                                                            </span>
+                                                                <% } %>
                                         </td>
                                         <td>
                                             <%= item.status %>

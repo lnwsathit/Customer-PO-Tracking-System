@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS bst_quotations (
 CREATE TABLE IF NOT EXISTS po_tracking (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   customer_id BIGINT NOT NULL,
-  customer_po_no VARCHAR(100) NOT NULL,
+  customer_po_no VARCHAR(100) NOT NULL UNIQUE,
   customer_po_file_path VARCHAR(255),
   receive_date DATE NOT NULL,
   delivery_due_date DATE NOT NULL,

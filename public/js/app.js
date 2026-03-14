@@ -170,4 +170,71 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    document.querySelectorAll('[data-customer-po-check-url]').forEach((input) => {
+        const url = input.getAttribute('data-customer-po-check-url');
+        const feedbackId = input.getAttribute('data-customer-po-feedback');
+        const feedback = feedbackId ? document.getElementById(feedbackId) : null;
+        const form = input.closest('form');
+
+        if (!url || !feedback || !form) {
+            return;
+        }
+
+        const setValidationState = (message) => {
+            const hasError = Boolean(message);
+            input.classList.toggle('is-invalid', hasError);
+            feedback.textContent = message || '';
+            feedback.classList.toggle('d-none', !hasError);
+            form.dataset.customerPoInvalid = hasError ? 'true' : 'false';
+        };
+
+        const checkAvailability = debounce(async () => {
+            const value = input.value.trim();
+
+            if (!value) {
+                setValidationState('');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${url}?customer_po_no=${encodeURIComponent(value)}`);
+                if (!response.ok) {
+                    setValidationState('');
+                    return;
+                }
+
+                const result = await response.json();
+                setValidationState(result.exists ? result.message || 'This Customer PO number already exists.' : '');
+            } catch (error) {
+                setValidationState('');
+            }
+        }, 250);
+
+        input.addEventListener('input', checkAvailability);
+        input.addEventListener('blur', checkAvailability);
+
+        form.addEventListener('submit', async (event) => {
+            const value = input.value.trim();
+            if (!value) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${url}?customer_po_no=${encodeURIComponent(value)}`);
+                if (!response.ok) {
+                    return;
+                }
+
+                const result = await response.json();
+                if (result.exists) {
+                    event.preventDefault();
+                    setValidationState(result.message || 'This Customer PO number already exists.');
+                    input.focus();
+                }
+            } catch (error) {
+                // Ignore network validation failures and fall back to server-side validation.
+            }
+        });
+    });
 });

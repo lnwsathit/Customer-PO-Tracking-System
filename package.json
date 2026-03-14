@@ -6,7 +6,8 @@
     "scripts": {
         "start": "node src/server.js",
         "dev": "nodemon src/server.js",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "db:add-customer-po-unique-index": "node scripts/add-customer-po-unique-index.js"
     },
     "engines": {
         "node": ">=20"

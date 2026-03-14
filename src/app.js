@@ -72,6 +72,7 @@ app.use((req, res, next) => {
     res.locals.currentUser = req.session.user || null;
     res.locals.flashSuccess = req.flash('success');
     res.locals.flashError = req.flash('error');
+    res.locals.selectedTracking = null;
     next();
 });
 

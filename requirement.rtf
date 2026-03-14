@@ -1,0 +1,475 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fnil\fcharset222 Thonburi;}
+{\colortbl;\red255\green255\blue255;\red24\green26\blue30;\red244\green246\blue249;\red10\green10\blue10;
+\red255\green255\blue255;\red0\green0\blue0;\red49\green49\blue49;\red252\green251\blue246;\red83\green83\blue83;
+\red242\green245\blue249;\red83\green101\blue228;\red242\green245\blue249;\red83\green101\blue228;\red38\green38\blue38;
+}
+{\*\expandedcolortbl;;\cssrgb\c12157\c13725\c15686;\cssrgb\c96471\c97255\c98039;\cssrgb\c3922\c3922\c3922;
+\cssrgb\c100000\c100000\c100000;\cssrgb\c0\c0\c0;\cssrgb\c25098\c25098\c25098;\cssrgb\c99216\c98824\c97255;\cssrgb\c40000\c40000\c40000;
+\cssrgb\c96078\c96863\c98039;\cssrgb\c40000\c49412\c91765;\cssrgb\c96078\c96863\c98039;\cssrgb\c40000\c49412\c91765;\cssrgb\c20000\c20000\c20000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww22580\viewh24620\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 You are a senior full-stack developer.\
+\
+Help me generate a production-ready web application called **Customer PO Tracking System**.\
+\
+The system will be developed on MacOS and deployed on Ubuntu server.\
+\
+=====================\
+TECH STACK\
+=====================\
+\
+Development Environment\
+- MacOS\
+\
+Production Server\
+- Ubuntu 20.04.6 LTS\
+- Nginx 1.18.0\
+- IP : \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 192.168.1.139\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+Frontend\
+- HTML5\
+- CSS3\
+\pard\pardeftab720\partightenfactor0
+\cf0 - \cf4 \cb5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec4 JavaScript\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Backend\
+- Node.js v20\
+\
+\
+Database\
+- MySQL  8.0.42 \
+- root password : 12345678\
+\
+Other tools\
+- npm 10.8.2\
+- Git\
+\
+Upload to github\
+\pard\pardeftab720\partightenfactor0
+\cf2 \cb5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 - repository : https://github.com/lnwsathit/Customer-PO-Tracking-System.git
+\fs40 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+=====================\
+DATABASE CONFIG\
+=====================\
+\
+Database: MySQL 8\
+\
+Tables required:\
+\
+users\
+- id\
+- username\
+- password_hash\
+- name\
+- role (data_entry, data_manager, system_admin)\
+- created_at\
+\
+customers\
+- id\
+- name\
+- address\
+- tax_no\
+- branch\
+- contact_person\
+- mobile_phone\
+- email\
+- created_at\
+\
+bst_quotations\
+- id\
+- bst_quotation_no\
+- bst_customer_id\
+- bst_quotation_date\
+- file_path\
+- detail\
+- created_at\
+\
+po_tracking\
+- id\
+- customer_id\
+- customer_po_no\
+- receive_date\
+- delivery_due_date\
+- bst_customer_id\
+- detail\
+- status (on_process, completed)\
+- created_at\
+\
+issued_po_supplier\
+- id\
+- po_tracking_id\
+- bst_po_no\
+- supplier_name\
+- issued_date\
+- file_path\
+- detail\
+\
+goods_receive\
+- id\
+- po_tracking_id\
+- supplier_invoice_no\
+- supplier_name\
+- receive_date\
+- file_path\
+- detail\
+\
+shipping\
+- id\
+- po_tracking_id\
+- shipping_date\
+- detail\
+\
+billing\
+- id\
+- po_tracking_id\
+- bst_invoice_no\
+- billing_date\
+- file_path\
+- detail\
+\
+\
+\
+=====================\
+PUBLIC WEBSITE\
+=====================\
+\
+INDEX PAGE\
+\
+Components\
+\
+1 Search Box\
+\
+Search by\
+- Customer PO No\
+- Quotation No\
+- Customer Name\
+\
+2 Search Result  Table\
+\
+Columns\
+- Customer Name\
+- Customer PO No\
+- Receive Date\
+- Status\
+- View Button\
+\
+3 Login Link Button\
+\
+=====================\
+PUBLIC VIEW PAGE\
+=====================\
+\
+Show Customer PO Tracking timeline\
+\
+Sections\
+\
+Receive Customer PO\
+- Customer Name\
+- Customer PO No\
+- Receive Date\
+- Ref Quotation No\
+- Detail\
+\
+#1 Issued PO To Supplier \
+- Issued PO Date\
+- Supplier Name\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 #2 (if have) Issued PO To Supplier \
+- Issued PO Date\
+- Supplier Name\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+#1 Goods Receive From Supplier\
+- Good Receive Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 #2 (If have)  Goods Receive From Supplier\
+- Good Receive Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+#1 Shipped \
+- Shipping Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 #2 (If have)  Shipped \
+- Shipping Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+#1 Billing  \
+- Billing Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 #2 (If have)  Billing  \
+- Billing Date\
+- Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Completed\
+- Record Date\
+\
+ Back Button.\
+\
+UI interface\
+\
+\pard\pardeftab720\sa240\partightenfactor0
+\cf0 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec6 \'e0\'ca\'e9\'b9 Timeline \'e1\'b9\'c7\'b5\'d1\'e9\'a7\
+Dot \'e1\'ca\'b4\'a7\'ca\'b6\'d2\'b9\'d0\
+Event \'c5\'e8\'d2\'ca\'d8\'b4\'ca\'d5\'e0\'a2\'e9\'c1\
+Event \'e0\'a1\'e8\'d2\'ca\'d5\'e0\'b7\'d2\
+Time \'cd\'c2\'d9\'e8\'b4\'e9\'d2\'b9\'c5\'e8\'d2\'a7\'a2\'e9\'cd\'a4\'c7\'d2\'c1\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+=====================\
+LOGIN PAGE\
+=====================\
+\
+\
+\
+Username\
+Password\
+\
+Login Button\
+\
+\
+\
+=====================\
+DASHBOARD PAGE\
+=====================\
+\
+\
+\
+Widgets \cf7 \cb8 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec7 Bootstrap 4/5 HTML, VueJS, React, Angular 11 & Laravel Admin Dashboard Theme\
+\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+1 Summary Chart\
+- Total Receive Customer PO\
+- Total On Process\
+- Total Completed\
+\
+2 Chart by Customer\
+Filter\
+- Month\
+- Year\
+\
+3 Data Table 10 item/ page\
+PO ordered by closest Delivery Due Date.\
+\
+\
+\
+\
+=====================\
+CUTTOMER PO TRACKING MANAGEMENT MANU\
+=====================\
+\
+Menu visible to all users.\
+\
+Section 1\
+PO Tracking List\
+\
+Table columns (Use Datatable)\
+- Customer\
+- Customer PO No\
+- Receive Date\
+- Delivery Due\
+- Status\
+\
+Actions\
+- View\
+- Edit\
+- Delete (Admin only)\
+\
+Section 2 \
+Create New Customer PO Tracking\
+\
+Process 1 Receive Customer PO\
+Fields\
+\
+Customer Name (autocomplete)\
+Customer PO No + PDF upload\
+Receive Date\
+Delivery Due Date\
+Quotation No (autocomplete)\
+Detail (100 characters)\
+\
+Process 2 Issued PO to Supplier  \
+Fields Can add more than 1 and can delete \
+BST PO No + PDF\
+Issued PO Date\
+Supplier Name\
+Detail\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0  \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Process 3 Goods Receive \
+Fields Can add more than 1 and can delete \
+Supplier Invoice No + PDF\
+Supplier Name\
+Receive Date\
+Detail\
+\
+Process 4 Shipping \
+Fields Can add more than 1 and can delete \
+Shipping Date\
+Detail\
+\
+Process 5 Billing \
+Fields Can add more than 1 and can delete \
+BST Invoice No + PDF\
+Billing Date\
+Detail\
+\
+Process 6 Completed\
+Completed Button\
+\
+Each process must be saved independently.\
+\
+=====================\
+QUOTATION MANAGEMENT MANU\
+=====================\
+\
+Permissions\
+data_manager\
+system_admin\
+\
+BST Quotation List   (Use Datatable)\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 - bst_quotation_no\
+- bst_customer \
+- bst_quotation_date\
+- 
+\fs26 \cf9 \cb10 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec9 Status
+\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+\
+Actions\
+- View\
+- Edit\
+- Delete  \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+
+\fs28 \cf11 \cb12 \expnd0\expndtw0\kerning0
+Create New 
+\fs24 \cf0 \cb1 \kerning1\expnd0\expndtw0  Quotation\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Fields\
+Customer Name (autocomplete)\
+Quotation No + upload PDF\
+Quotation Date\
+Detail\
+\
+=====================\
+CUSTOMER MANAGEMENT MANU\
+=====================\
+\
+Permissions\
+data_manager\
+system_admin\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Table  Customer List\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 - Customer  \cf9 \cb10 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec9 Name\
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb10 \strokec9 - Contact Person\
+- Email\
+- Phone\
+- Status\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Actions\
+- View\
+- Edit\
+- Delete  \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf13 \cb10 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec13 Create New Customer\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -Fields\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -Customer Name\
+-Branch\
+\pard\pardeftab720\partightenfactor0
+\cf14 \cb5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec14 -Address\
+-Tax ID\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 -Contact Person\
+-Mobile Phone\
+-Email\
+\pard\pardeftab720\partightenfactor0
+\cf14 \cb5 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec14 -Status\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+=====================\
+USER MANAGEMENT MANU\
+=====================\
+\
+Permissions\
+system_admin only\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Table User list  \
+\pard\pardeftab720\partightenfactor0
+\cf9 \cb10 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec9  - Username \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0  - \cf9 \cb10 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec9 Full Name\
+- Role\
+- Status\
+- Created\cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 Actions\
+- View\
+- Edit\
+- Delete  \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+User Fields\
+Username\
+Password\
+Name Lastname\
+Role dropdown\
+\pard\pardeftab720\partightenfactor0
+\cf14 \cb5 \expnd0\expndtw0\kerning0
+Status\cf0 \cb1 \kerning1\expnd0\expndtw0 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+Roles\
+- data_entry\
+- data_manager\
+- system_admin\
+\
+\
+\
+\
+}

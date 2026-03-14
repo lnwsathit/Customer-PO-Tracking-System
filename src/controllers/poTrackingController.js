@@ -1,5 +1,49 @@
 const pool = require('../config/db');
 
+async function getActiveCustomers() {
+    const [customers] = await pool.execute('SELECT id, name FROM customers WHERE status = "active" ORDER BY name ASC');
+    return customers;
+}
+
+function normalizeCustomerPoNo(value) {
+    return (value || '').trim();
+}
+
+async function findTrackingByCustomerPoNo(customerPoNo, excludeId = null) {
+    const normalizedCustomerPoNo = normalizeCustomerPoNo(customerPoNo);
+    if (!normalizedCustomerPoNo) {
+        return null;
+    }
+
+    const query = excludeId
+        ? 'SELECT id FROM po_tracking WHERE customer_po_no = ? AND id <> ? LIMIT 1'
+        : 'SELECT id FROM po_tracking WHERE customer_po_no = ? LIMIT 1';
+    const params = excludeId ? [normalizedCustomerPoNo, excludeId] : [normalizedCustomerPoNo];
+    const [[row]] = await pool.execute(query, params);
+
+    return row || null;
+}
+
+async function renderCreateForm(res, options = {}) {
+    const customers = await getActiveCustomers();
+    const formData = options.formData || {};
+
+    return res.status(options.statusCode || 200).render('po-tracking/create', {
+        title: 'Create PO Tracking',
+        customers,
+        formData: {
+            customer_id: formData.customer_id || '',
+            bst_customer_id: formData.bst_customer_id || '',
+            bst_quotation_no: formData.bst_quotation_no || '',
+            customer_po_no: formData.customer_po_no || '',
+            receive_date: formData.receive_date || '',
+            delivery_due_date: formData.delivery_due_date || '',
+            detail: formData.detail || ''
+        },
+        customerPoError: options.customerPoError || ''
+    });
+}
+
 function toArray(value) {
     if (Array.isArray(value)) {
         return value;
@@ -36,22 +80,44 @@ async function list(req, res) {
 }
 
 async function showCreate(req, res) {
-    const [customers] = await pool.execute('SELECT id, name FROM customers WHERE status = "active" ORDER BY name ASC');
-    res.render('po-tracking/create', { title: 'Create PO Tracking', customers });
+    return renderCreateForm(res);
 }
 
 async function create(req, res) {
     const { customer_id, customer_po_no, receive_date, delivery_due_date, bst_customer_id, detail } = req.body;
+    const normalizedCustomerPoNo = normalizeCustomerPoNo(customer_po_no);
     const filePath = req.file ? req.file.filename : null;
-    const [result] = await pool.execute(
-        `INSERT INTO po_tracking
+
+    const duplicateRecord = await findTrackingByCustomerPoNo(normalizedCustomerPoNo);
+    if (duplicateRecord) {
+        return renderCreateForm(res, {
+            statusCode: 409,
+            formData: req.body,
+            customerPoError: 'This Customer PO number already exists.'
+        });
+    }
+
+    try {
+        const [result] = await pool.execute(
+            `INSERT INTO po_tracking
      (customer_id, customer_po_no, customer_po_file_path, receive_date, delivery_due_date, bst_customer_id, detail)
      VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [customer_id, customer_po_no, filePath, receive_date, delivery_due_date, bst_customer_id || null, detail]
-    );
+            [customer_id, normalizedCustomerPoNo, filePath, receive_date, delivery_due_date, bst_customer_id || null, detail]
+        );
 
-    req.flash('success', 'PO tracking created. You can now add process steps.');
-    res.redirect(`/po-tracking/${result.insertId}/edit`);
+        req.flash('success', 'PO tracking created. You can now add process steps.');
+        res.redirect(`/po-tracking/${result.insertId}/edit`);
+    } catch (error) {
+        if (error && error.code === 'ER_DUP_ENTRY') {
+            return renderCreateForm(res, {
+                statusCode: 409,
+                formData: req.body,
+                customerPoError: 'This Customer PO number already exists.'
+            });
+        }
+
+        throw error;
+    }
 }
 
 async function showEdit(req, res) {
@@ -85,22 +151,38 @@ async function showEdit(req, res) {
 async function updateHeader(req, res) {
     const { id } = req.params;
     const { customer_id, customer_po_no, receive_date, delivery_due_date, bst_customer_id, detail, status } = req.body;
+    const normalizedCustomerPoNo = normalizeCustomerPoNo(customer_po_no);
     const filePath = req.file ? req.file.filename : null;
 
-    if (filePath) {
-        await pool.execute(
-            `UPDATE po_tracking
+    const duplicateRecord = await findTrackingByCustomerPoNo(normalizedCustomerPoNo, id);
+    if (duplicateRecord) {
+        req.flash('error', 'This Customer PO number already exists.');
+        return res.redirect(`/po-tracking/${id}/edit`);
+    }
+
+    try {
+        if (filePath) {
+            await pool.execute(
+                `UPDATE po_tracking
        SET customer_id = ?, customer_po_no = ?, customer_po_file_path = ?, receive_date = ?, delivery_due_date = ?, bst_customer_id = ?, detail = ?, status = ?
        WHERE id = ?`,
-            [customer_id, customer_po_no, filePath, receive_date, delivery_due_date, bst_customer_id || null, detail, status, id]
-        );
-    } else {
-        await pool.execute(
-            `UPDATE po_tracking
+                [customer_id, normalizedCustomerPoNo, filePath, receive_date, delivery_due_date, bst_customer_id || null, detail, status, id]
+            );
+        } else {
+            await pool.execute(
+                `UPDATE po_tracking
        SET customer_id = ?, customer_po_no = ?, receive_date = ?, delivery_due_date = ?, bst_customer_id = ?, detail = ?, status = ?
        WHERE id = ?`,
-            [customer_id, customer_po_no, receive_date, delivery_due_date, bst_customer_id || null, detail, status, id]
-        );
+                [customer_id, normalizedCustomerPoNo, receive_date, delivery_due_date, bst_customer_id || null, detail, status, id]
+            );
+        }
+    } catch (error) {
+        if (error && error.code === 'ER_DUP_ENTRY') {
+            req.flash('error', 'This Customer PO number already exists.');
+            return res.redirect(`/po-tracking/${id}/edit`);
+        }
+
+        throw error;
     }
 
     req.flash('success', 'PO header updated.');
@@ -263,6 +345,16 @@ async function view(req, res) {
     return res.redirect(`/tracking/${id}`);
 }
 
+async function checkCustomerPoAvailability(req, res) {
+    const customerPoNo = normalizeCustomerPoNo(req.query.customer_po_no);
+    const existing = await findTrackingByCustomerPoNo(customerPoNo);
+
+    res.json({
+        exists: Boolean(existing),
+        message: existing ? 'This Customer PO number already exists.' : ''
+    });
+}
+
 module.exports = {
     list,
     showCreate,
@@ -279,5 +371,6 @@ module.exports = {
     removeBilling,
     complete,
     remove,
-    view
+    view,
+    checkCustomerPoAvailability
 };
